@@ -1,0 +1,8 @@
+.env
+.env.*
+assets/main-cedar-391910-cd7c5ebfdd8b.json
+storage/*.json
+assets/upload/googleTranslateCredential/*.txt
+assets/upload/googleTranslateCredential/*.json
+/vendor
+/node_modules
