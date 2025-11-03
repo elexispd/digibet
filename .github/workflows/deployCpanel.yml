@@ -1,0 +1,48 @@
+name: 🚀 Deploy to cPanel via FTP
+
+on:
+  push:
+    branches:
+      - master  # trigger deployment on push to master branch
+
+jobs:
+  deploy:
+    name: Upload Files to cPanel
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧱 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Build project (optional)
+        if: hashFiles('composer.json') != '' || hashFiles('package.json') != ''
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-dev --optimize-autoloader
+          fi
+          if [ -f package.json ]; then
+            npm install
+            npm run build
+          fi
+
+      - name: 🚀 Deploy to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp                     # or ftps if your cPanel supports secure FTP
+          server-dir: /public_html/         # adjust if your project is in a subfolder
+          local-dir: ./                     # your local project root
+          exclude: |
+            **/.git*
+            **/.github*
+            **/.env
+            **/.env.*
+            assets/main-cedar-391910-cd7c5ebfdd8b.json
+            storage/*.json
+            assets/upload/googleTranslateCredential/*.txt
+            assets/upload/googleTranslateCredential/*.json
+            vendor/**
+            node_modules/**
+            tests/**
