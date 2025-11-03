@@ -1,39 +1,31 @@
-name: 🚀 Deploy to cPanel via FTP
+name: Deploy Laravel to Namecheap
 
 on:
   push:
     branches:
-      - master  # trigger deployment on push to master branch
+      - master   # deploy only when pushing to master branch
 
 jobs:
   deploy:
-    name: Upload Files to cPanel
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧱 Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: 📦 Build project (optional)
-        if: hashFiles('composer.json') != '' || hashFiles('package.json') != ''
-        run: |
-          if [ -f composer.json ]; then
-            composer install --no-dev --optimize-autoloader
-          fi
-          if [ -f package.json ]; then
-            npm install
-            npm run build
-          fi
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
 
-      - name: 🚀 Deploy to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # Upload Laravel core (app folder) to server
+      - name: Upload Laravel Core
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp                     # or ftps if your cPanel supports secure FTP
-          server-dir: /public_html/         # adjust if your project is in a subfolder
-          local-dir: ./                     # your local project root
+          port: 21
+          server-dir: /app/       # target on server
+          local-dir: ./
           exclude: |
             **/.git*
             **/.github*
@@ -43,6 +35,16 @@ jobs:
             storage/*.json
             assets/upload/googleTranslateCredential/*.txt
             assets/upload/googleTranslateCredential/*.json
-            vendor/**
-            node_modules/**
-            tests/**
+          log-level: verbose
+
+      # Upload public files to public_html
+      - name: Upload Public Files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          server-dir: /public_html/
+          local-dir: ./public/
+          log-level: verbose
