@@ -7,7 +7,7 @@
     <li>
         <a  @if(Request::routeIs('home')) class="active" @endif
             href="{{route('home')}}">
-            <i class="far fa-globe-americas"></i> <span>{{trans('All Sports')}}</span>
+            <i class="far fa-globe-americas"></i> <span>{{trans('All Sports')}} </span>
         </a>
     </li>
     @forelse($gameCategories as $gameCategory)
@@ -29,7 +29,7 @@
                     @forelse($gameCategory->activeTournament as $tItem)
                         <li>
                             <a href="{{route('tournament',[slug($tItem->name) , $tItem->id ])}}" class="sidebar-link {{( Request::routeIs('tournament') && $last == $tItem->id) ? 'active' : '' }}">
-                                <i class="far fa-hand-point-right"></i> {{$tItem->name}}</a>
+                                <i class=""></i> {{$tItem->name}}</a>
                         </li>
                     @empty
                     @endforelse
