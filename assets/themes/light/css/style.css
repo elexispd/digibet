@@ -1046,6 +1046,146 @@ a.btn-custom {
     margin-left: 0;
 }
 
+/* Modal Layout Improvements */
+.modal-lg {
+    max-width: 900px;
+}
+
+.modal-content {
+    border-radius: 8px;
+    overflow: hidden;
+    border: none;
+}
+
+/* Modal header inside column */
+#loginModal .modal-header,
+#registerModal .modal-header {
+    padding: 20px 25px;
+    background: var(--white);
+    border-bottom: 1px solid var(--borderColor);
+}
+
+.dark-mode #loginModal .modal-header,
+.dark-mode #registerModal .modal-header {
+    background: var(--bgDark2);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Column heights */
+.modal-content .col-md-6 {
+    min-height: 550px;
+}
+
+.modal-content .col-md-6 img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    min-height: 550px;
+}
+
+/* Right column with header and form */
+#loginModal .col-md-6.d-flex,
+#registerModal .col-md-6.d-flex {
+    background: var(--white);
+}
+
+.dark-mode #loginModal .col-md-6.d-flex,
+.dark-mode #registerModal .col-md-6.d-flex {
+    background: var(--bgDark2);
+}
+
+/* Modal body centering */
+#loginModal .modal-body,
+#registerModal .modal-body {
+    padding: 25px 40px;
+}
+
+#loginModal .modal-body .w-100,
+#registerModal .modal-body .w-100 {
+    max-width: 100%;
+}
+
+/* Form container width */
+#loginModal .login-form,
+#registerModal .login-form {
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+/* Modal header spacing */
+#loginModal .modal-header,
+#registerModal .modal-header {
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+#loginModal .modal-header h4,
+#registerModal .modal-header h4 {
+    margin-bottom: 0;
+}
+
+/* Input fields with all borders */
+#loginModal .modal-body .input-box .form-control,
+#loginModal .modal-body .input-box .form-select,
+#registerModal .modal-body .input-box .form-control,
+#registerModal .modal-body .input-box .form-select {
+    height: 45px;
+    border-radius: 5px;
+    background-color: var(--white);
+    border: 1px solid var(--borderColor);
+    padding: 10px 15px;
+    color: var(--black);
+}
+
+/* Input focus states */
+#loginModal .modal-body .input-box .form-control:focus,
+#loginModal .modal-body .input-box .form-select:focus,
+#registerModal .modal-body .input-box .form-control:focus,
+#registerModal .modal-body .input-box .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(253, 214, 15, 0.15);
+    background-color: var(--white);
+}
+
+/* Dark mode inputs */
+.dark-mode #loginModal .modal-body .input-box .form-control,
+.dark-mode #loginModal .modal-body .input-box .form-select,
+.dark-mode #registerModal .modal-body .input-box .form-control,
+.dark-mode #registerModal .modal-body .input-box .form-select {
+    background-color: var(--bgDark);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+}
+
+.dark-mode #loginModal .modal-body .input-box .form-control:focus,
+.dark-mode #loginModal .modal-body .input-box .form-select:focus,
+.dark-mode #registerModal .modal-body .input-box .form-control:focus,
+.dark-mode #registerModal .modal-body .input-box .form-select:focus {
+    background-color: var(--bgDark);
+    border-color: var(--primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-content .col-md-6 {
+        min-height: auto;
+    }
+    
+    .modal-lg {
+        max-width: 95%;
+    }
+    
+    #loginModal .modal-body,
+    #registerModal .modal-body {
+        padding: 20px;
+    }
+    
+    #loginModal .login-form,
+    #registerModal .login-form {
+        max-width: 100%;
+    }
+}
+
 #makeDeposit .input-box label {
     margin-bottom: 5px;
     text-transform: capitalize;
