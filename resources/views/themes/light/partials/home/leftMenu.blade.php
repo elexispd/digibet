@@ -29,7 +29,7 @@
                     @forelse($gameCategory->activeTournament as $tItem)
                         <li>
                             <a href="{{route('tournament',[slug($tItem->name) , $tItem->id ])}}" class="sidebar-link {{( Request::routeIs('tournament') && $last == $tItem->id) ? 'active' : '' }}">
-                                <i class="far fa-hand-point-right"></i> {{$tItem->name}}</a>
+                                <i class="far fa-solid fa-circle" style="font-size: 6px; color:#fdd60f"></i> {{$tItem->name}}</a>
                         </li>
                     @empty
                     @endforelse

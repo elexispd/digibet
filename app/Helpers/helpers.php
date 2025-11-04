@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BasicControl;
+use App\Models\GameCategory;
 use App\Models\ManageMenu;
 use App\Models\Page;
 use App\Models\User;
@@ -739,37 +740,6 @@ if (!function_exists('recursive_array_replace')) {
     }
 }
 
-if (!function_exists('getHeaderMenuData')) {
-    function getHeaderMenuData()
-    {
-        $menu = ManageMenu::where('menu_section', 'header')->first();
-        $menuData = [];
-
-        if ($menu && $menu->menu_items) {
-            foreach ($menu->menu_items as $key => $menuItem) {
-                if (is_numeric($key)) {
-                    $pageDetails = getPageDetails($menuItem);
-                    $menuIDetails = [
-                        'name' => $pageDetails->page_name ?? $pageDetails->name ?? $menuItem,
-                        'route' => isset($pageDetails->slug) ? route('page', $pageDetails->slug) : ($pageDetails->custom_link ?? staticPagesAndRoutes($menuItem)),
-                    ];
-                } elseif (is_array($menuItem)) {
-                    $pageDetails = getPageDetails($key);
-                    $child = getHeaderChildMenu($menuItem);
-                    $menuIDetails = [
-                        'name' => $pageDetails->page_name ?? $pageDetails->name ?? null,
-                        'route' => isset($pageDetails->slug) ? route('page', $pageDetails->slug) : ($pageDetails->custom_link ?? staticPagesAndRoutes($key)),
-                        'child' => $child
-                    ];
-                }
-                $menuData[] = $menuIDetails;
-            }
-
-            return $menuData;
-        }
-
-    }
-}
 
 if (!function_exists('staticPagesAndRoutes')) {
     function staticPagesAndRoutes($name)
@@ -841,21 +811,38 @@ if (!function_exists('getPageDetails')) {
 }
 
 if (!function_exists('renderHeaderMenu')) {
-    function renderHeaderMenu($menuItems)
+    function renderHeaderMenu($menuItems, $limit = 3)
     {
         if ($menuItems) {
             echo '<ul class="navbar-nav">';
+
+            // Loop through dynamic categories
             foreach ($menuItems as $menuItem) {
                 if (isset($menuItem['child'])) {
-                    echo '<li class="dropdown text-capitalize">';
+                    echo '<li class="dropdown text-capitalize text-primary">';
                     echo '<a href="javascript:void(0)"><span>' . $menuItem['name'] . '</span> <i class="bi bi-chevron-down"></i></a>';
                     renderHeaderMenu($menuItem['child']);
                 } else {
                     echo '<li class="nav-item">';
-                    echo '<a class="nav-link text-capitalize" href="' . $menuItem['route'] . '">' . $menuItem['name'] . '</a>';
+                    // ✅ use the correct key "class"
+                    echo '<a class="nav-link text-capitalize text-primary ' . ($menuItem['class'] ?? '') . '" href="' . $menuItem['route'] . '">';
+                    echo $menuItem['name'];
+                    echo '</a>';
                 }
                 echo '</li>';
             }
+
+            // ✅ Add static "Promotion" menu item with gift icon
+            $currentUrl = url()->current();
+            $promotionUrl = url('/promotion');
+            $isPromotionActive = ($currentUrl == $promotionUrl) ? 'active-menu' : '';
+
+            echo '<li class="nav-item">';
+            echo '<a class="nav-link text-capitalize text-muted' . $isPromotionActive . '" href="' . $promotionUrl . '">';
+            echo '<i class="fa fa-gift" aria-hidden="true"></i> Promotion';
+            echo '</a>';
+            echo '</li>';
+
             echo '</ul>';
         }
         return '';
@@ -863,29 +850,41 @@ if (!function_exists('renderHeaderMenu')) {
 }
 
 
-if (!function_exists('getFooterMenuData')) {
-    function getFooterMenuData($type)
+
+
+if (!function_exists('getHeaderMenuData')) {
+    function getHeaderMenuData()
     {
-        $menu = ManageMenu::where('menu_section', 'footer')->first();
+        $currentUrl = url()->current(); // Get current full URL
+        $categories = GameCategory::limit(3)->get();
         $menuData = [];
 
-        if (isset($menu->menu_items[$type])) {
-            foreach ($menu->menu_items[$type] as $key => $menuItem) {
-                $pageDetails = getPageDetails($menuItem);
-                $menuIDetails = [
-                    'name' => $pageDetails->page_name ?? $pageDetails->name ?? $menuItem,
-                    'route' => isset($pageDetails->slug) ? route('page', $pageDetails->slug) : ($pageDetails->custom_link ?? staticPagesAndRoutes($menuItem)),
+        if ($categories->count()) {
+            foreach ($categories as $category) {
+                $icon = $category->icon ?? '';
+
+                $route = route('category', [
+                    'category_slug' => $category->slug ?? slug($category->name),
+                    'category_id' => $category->id
+                ]);
+
+                // ✅ Apply the active-menu class when current URL matches
+                $isActive = ($currentUrl == $route) ? 'active-menu' : '';
+
+                $menuData[] = [
+                    'name' => $icon . ' ' . ($category->name ?? 'Unnamed Category'),
+                    'route' => $route,
+                    'class' => $isActive,
                 ];
-                $menuData[] = $menuIDetails;
             }
-            foreach ($menuData as $item) {
-                $che = '<li><a  href="' . $item['route'] . '">' . $item['name'] . '</a></li>';
-                $flattenedMenuData[] = $che;
-            }
-            return $flattenedMenuData;
+
+            return $menuData;
         }
+
+        return [];
     }
 }
+
 
 function getPageName($name)
 {
