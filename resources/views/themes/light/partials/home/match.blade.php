@@ -1,3 +1,4 @@
+
 <div class="all-markets">
     <div class="search-bar">
         <div class="row">

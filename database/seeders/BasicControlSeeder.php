@@ -526,22 +526,22 @@ class BasicControlSeeder extends Seeder
     .mso .font-cabin,
     .mso .font-open-sans,
     .mso .font-ubuntu {
-        font-family: sans-serif !important;
+        font-family: "Poppins",sans-serif !important;
     }
 
     .mso .font-bitter,
     .mso .font-merriweather,
     .mso .font-pt-serif {
-        font-family: Georgia, serif !important;
+        font-family: "Poppins", sans-serif !important;
     }
 
     .mso .font-lato,
     .mso .font-roboto {
-        font-family: Tahoma, sans-serif !important;
+        font-family: "Poppins", sans-serif !important;
     }
 
     .mso .font-pt-sans {
-        font-family: "Trebuchet MS", sans-serif !important;
+        font-family: "Poppins", sans-serif !important;
     }
 
     .mso .footer__share-button p {
@@ -846,7 +846,7 @@ class BasicControlSeeder extends Seeder
     }
 
     .mso h1 {
-        font-family: sans-serif !important
+        font-family: "Poppins", sans-serif !important
     }
 
     .mso h2 {
@@ -861,14 +861,14 @@ class BasicControlSeeder extends Seeder
 
     .mso .column,
     .mso .column__background td {
-        font-family: sans-serif !important
+        font-family: "Poppins", sans-serif !important
     }
 
     .mso .btn a {
     }
 
     .mso .btn a {
-        font-family: sans-serif !important
+        font-family: "Poppins", sans-serif !important
     }
 
     .mso .webversion,
@@ -881,14 +881,14 @@ class BasicControlSeeder extends Seeder
     .mso .snippet,
     .mso .layout-email-footer td,
     .mso .footer__share-button p {
-        font-family: sans-serif !important
+        font-family: "Poppins", sans-serif !important
     }
 
     .mso .logo {
     }
 
     .mso .logo {
-        font-family: Tahoma, sans-serif !important
+        font-family: "Poppins", sans-serif !important
     }
 
     .logo a:hover,
@@ -988,7 +988,7 @@ class BasicControlSeeder extends Seeder
             <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #c4e5dc;" lang="x-layout__inner">
                 <div class="column" style="text-align: left;color: #60666d;font-size: 14px;line-height: 21px;max-width:600px;min-width:320px;">
                     <div style="margin-left: 20px;margin-right: 20px;margin-top: 24px;margin-bottom: 24px;">
-                        <h1 style="margin-top: 0;margin-bottom: 0;font-style: normal;font-weight: normal;color: #44a8c7;font-size: 36px;line-height: 43px;font-family: bitter,georgia,serif;text-align: center;">
+                        <h1 style="margin-top: 0;margin-bottom: 0;font-style: normal;font-weight: normal;color: #44a8c7;font-size: 36px;line-height: 43px;font-family: "Poppins",georgia,serif;text-align: center;">
                             <img style="width: 200px;" src="https://bug-finder.s3.ap-southeast-1.amazonaws.com/assets/logo/header-logo.svg" data-filename="imageedit_76_3542310111.png"></h1>
                     </div>
                 </div>
@@ -1016,7 +1016,7 @@ class BasicControlSeeder extends Seeder
             <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #2c3262; margin-bottom: 20px" lang="x-layout__inner">
                 <div class="column" style="text-align: left;color: #60666d;font-size: 14px;line-height: 21px;max-width:600px;min-width:320px;">
                     <div style="margin-top: 5px;margin-bottom: 5px;">
-                        <p style="margin-top: 0;margin-bottom: 0;font-style: normal;font-weight: normal;color: #ffffff;font-size: 16px;line-height: 35px;font-family: bitter,georgia,serif;text-align: center;">
+                        <p style="margin-top: 0;margin-bottom: 0;font-style: normal;font-weight: normal;color: #ffffff;font-size: 16px;line-height: 35px;font-family: "Poppins",georgia,serif;text-align: center;">
                             2022 ©  All Right Reserved</p>
                     </div>
                 </div>

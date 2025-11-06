@@ -25,9 +25,6 @@ class GameFetchController extends Controller
             ->when(request('matchId', false), function ($q, $matchId) {
                 $q->where('id', $matchId);
             })
-
-//            ->where('start_date', '<=', $now)
-//            ->where('end_date', '>', $now)
             ->whereHas('gameTeam1')
             ->whereHas('gameTeam2')
             ->whereHas('gameTournament', function ($query) {
@@ -115,13 +112,34 @@ class GameFetchController extends Controller
                 ];
             });
 
-        $list = $matches->where('start_date', '<=', $now)->where('end_date', '>', $now);
+        $list = $matches->where('start_date', '<=', $now)->where('end_date', '>', $now)->values();
         $upcoming = $matches->where('start_date', '>', $now)->where('end_date', '>', $now)->values();
 
+        // Debug: Log the counts
+        \Log::info('GameFetch Debug', [
+            'total_matches' => $matches->count(),
+            'live_count' => $list->count(),
+            'upcoming_count' => $upcoming->count(),
+            'tournamentId' => request('tournamentId'),
+            'matchId' => request('matchId'),
+            'categoryId' => request('categoryId'),
+        ]);
+
+        // If no matches found in date filtering, return all matches for debugging
+        if ($list->isEmpty() && $upcoming->isEmpty() && $matches->isNotEmpty()) {
+            \Log::warning('No matches found in date filters, returning all matches');
+            return response([
+                'liveList' => $matches->values(),
+                'upcomingList' => collect([]),
+                'total' => $matches->count(),
+                'debug' => 'Date filtering returned empty, showing all matches as live'
+            ], 200);
+        }
 
         return response([
             'liveList' => $list,
             'upcomingList' => $upcoming,
+            'total' => $matches->count(),
         ], 200);
     }
 }

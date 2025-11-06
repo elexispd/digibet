@@ -62,7 +62,7 @@
                 </p>
             </td>
 
-            <td v-if="index <= 2" v-for="(question, index) in item.questions">
+            <td  v-for="(question, index) in item.questions">
                 <div class="d-flex justify-content-evenly w-100">
                     <button type="button" :disabled="option.is_unlock_question == 1 || option.is_unlock_match == 1 "
                             :class="{ disabled: (option.is_unlock_question == 1 || option.is_unlock_match == 1) }"

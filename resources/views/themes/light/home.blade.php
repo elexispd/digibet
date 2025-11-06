@@ -114,13 +114,17 @@
                     }
 
 
+                    console.log('Fetching matches from:', $url);
                     await axios.get($url)
                         .then(function (response) {
+                            console.log('API Response:', response.data);
+                            console.log('Live matches count:', response.data.liveList ? response.data.liveList.length : 0);
+                            console.log('Upcoming matches count:', response.data.upcomingList ? response.data.upcomingList.length : 0);
                             _this.allSports_filter = response.data.liveList;
                             _this.upcoming_filter = response.data.upcomingList;
                         })
                         .catch(function (error) {
-                            console.log(error);
+                            console.log('API Error:', error);
                         })
                 },
 

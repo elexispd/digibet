@@ -20,7 +20,7 @@
 }
 
 body {
-    font-family: "Rajdhani", sans-serif;
+    font-family: "poppins", sans-serif;
     color: var(--black);
     background: var(--bgLight);
     font-weight: 500;
@@ -5217,3 +5217,4 @@ img#no-data-image {
 .input-group-text:hover{
     background-color: var(--primary);
 }
+

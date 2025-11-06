@@ -57,7 +57,7 @@ trait Upload
             $image->resize($size[0], $size[1]);
         }
 
-        $path = $location . '/' . Str::random(30) . '.' . $encodedFormat ?? $fileExtension;
+        $path = $location . '/' . Str::random(30) . '.' . ($encodedFormat ?? $fileExtension);
         Storage::disk($activeDisk)->put($path, !empty($encodedFormat) ? $image->encode($encodedFormat, $encodedQuality) : $image->encode());
         return $path;
     }

@@ -73,12 +73,13 @@ class FrontendController extends Controller
     public function tournament($slug = null, $id)
     {
         $data['gameCategories'] = GameCategory::with(['activeTournament'])->withCount('gameActiveMatch')->whereStatus(1)->orderBy('game_active_match_count', 'desc')->get();
+        $data['tournamentId'] = $id;
         return view(template() . 'home', $data);
     }
-
     public function match($slug = null, $id)
     {
-        $data['gameCategories'] = GameCategory::with(['activeTournament'])->withCount('gameActiveMatch')->whereStatus(1)->orderBy('game_active_match_count', 'desc')->get();
+        $data['gameCategories'] = GameCategory::with(['activeTournament','gameTeam'])->withCount('gameActiveMatch')->whereStatus(1)->orderBy('game_active_match_count', 'desc')->get();
+        $data['matchId'] = $id;
         return view(template() . 'home', $data);
     }
 

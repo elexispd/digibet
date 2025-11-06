@@ -1,7 +1,7 @@
 <!-- categories -->
 <div class="categories" id="categories">
     <a href="{{route('home')}}" @if(Request::routeIs('home')) class="active" @endif>
-        <i class="far fa-globe-americas"></i> <span>{{trans('All Sports')}}</span>
+        <i class="far fa-globe-americas"></i> <span>{{trans('All Sports')}} </span>
     </a>
 
     @php

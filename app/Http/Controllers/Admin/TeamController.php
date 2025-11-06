@@ -8,9 +8,12 @@ use App\Models\GameTeam;
 use App\Traits\Upload;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class TeamController extends Controller
 {
@@ -75,7 +78,6 @@ class TeamController extends Controller
                 return '<input type="checkbox" id="chk-' . $item->id . '"
                                        class="form-check-input row-tic tic-check" name="check" value="' . $item->id . '"
                                        data-id="' . $item->id . '">';
-
             })
             ->addColumn('name', function ($item) {
                 $url = getFile($item->driver, $item->image);
@@ -98,7 +100,6 @@ class TeamController extends Controller
                     return '<span class="badge bg-soft-success text-success">
                     <span class="legend-indicator bg-success"></span>' . trans('Active') . '
                   </span>';
-
                 } else {
                     return '<span class="badge bg-soft-danger text-danger">
                     <span class="legend-indicator bg-danger"></span>' . trans('In Active') . '
@@ -139,59 +140,57 @@ class TeamController extends Controller
 
     public function storeTeam(Request $request)
     {
-        $purifiedData = $request->all();
-
-        if ($request->has('image')) {
-            $purifiedData['image'] = $request->image;
-        }
-        $rules = [
+        $request->validate([
             'name' => 'required|max:40',
             'category' => 'required',
-            'image' => 'required|mimes:jpg,jpeg,png,webp',
-        ];
-        $message = [
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ], [
             'name.required' => 'Name field is required',
             'category.required' => 'Category field is required',
-        ];
-
-        $validate = Validator::make($purifiedData, $rules, $message);
-
-        if ($validate->fails()) {
-            return back()->withInput()->withErrors($validate);
-        }
+        ]);
 
         try {
-
             $gameTeam = new GameTeam();
+            $gameTeam->category_id = $request->category;
+            $gameTeam->name = $request->name;
+            $gameTeam->status = $request->status;
 
-            if ($request->has('category')) {
-                $gameTeam->category_id = @$purifiedData['category'];
-            }
-            if ($request->has('name')) {
-                $gameTeam->name = @$purifiedData['name'];
-            }
             if ($request->hasFile('image')) {
-                try {
-                    $uploadedImage = $this->fileUpload($request->image, config('filelocation.team.path'), null, config('filelocation.team.size'), 'webp', 60);
-                    if ($uploadedImage) {
-                        $gameTeam->image = $uploadedImage['path'];
-                        $gameTeam->driver = $uploadedImage['driver'];
-                    }
-                } catch (\Exception $exp) {
-                    return back()->with('error', 'Image could not be uploaded.');
-                }
-            }
+                $image = $request->file('image');
+                $filename = 'team_' . time() . '_' . Str::random(10) . '.webp';
+                $path = config('filelocation.team.path') . '/' . $filename;
 
-            $gameTeam->status = $purifiedData['status'];
+                // Ensure directory exists
+                $disk = config('filesystems.default');
+                if (!Storage::disk($disk)->exists(config('filelocation.team.path'))) {
+                    Storage::disk($disk)->makeDirectory(config('filelocation.team.path'));
+                }
+
+                // Process image - FIX: Use file content instead of path
+                $img = Image::make($image->get());
+
+                // Resize to 64x64
+                $img->resize(64, 64, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
+                // Encode as webp with 60% quality
+                $encodedImage = $img->encode('webp', 60);
+
+                // Save to storage
+                Storage::disk($disk)->put($path, $encodedImage->__toString());
+
+                $gameTeam->image = $path;
+                $gameTeam->driver = $disk;
+            }
 
             $gameTeam->save();
             return back()->with('success', 'Successfully Saved');
-
         } catch (\Exception $e) {
-            return back();
+            return back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
-
     public function updateTeam(Request $request, $id)
     {
         $purifiedData = $request->all();
@@ -235,7 +234,6 @@ class TeamController extends Controller
 
             $gameTeam->save();
             return back()->with('success', 'Successfully Updated');
-
         } catch (\Exception $e) {
             return back();
         }
